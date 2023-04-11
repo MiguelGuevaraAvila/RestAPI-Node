@@ -1,0 +1,16 @@
+[
+    {
+        "id":1,
+        "title": "Titanic",
+        "director" : "mc macno",
+        "year" : "1935",
+        "type" : "Drama"
+    },
+    {
+        "id":2,
+        "title": "E.T",
+        "director" : "El gontyrri",
+        "year" : "1982",
+        "type" : "Paranormal"
+    }
+]
