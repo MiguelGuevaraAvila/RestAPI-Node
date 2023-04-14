@@ -3,32 +3,41 @@ const router = Router();
 const _ = require('underscore');
 
 const movies = require('./sample.json');
+
+
 //console.log(movies);
 
 router.get('/', (req, res) => {
         res.json(movies);
 });
 
-router.post('/', (req, res) => {
-    //console.log(req.body);
-    const {title, director, year, type}= req.body;
-    if(title && director && year && type)
-    {
-        const id = movies.length + 1;
-        const newMovie = {...req.body, id};
-        res.json(movies);
-        //console.log(newMovie);
-        movies.push(newMovie);
+router.post('/', [
+        req.body('year', 'ingrese correctamente el campo de año')
+        .exists().isNumeric().isLength({min:4,max:4}),
+        req.body('title', 'ingrese un titulo válido')
+        .exists().isLength({min:4,max:4}),
+        req.body('director', 'ingrese un director válido')
+        .exists().isLength({min:4,max:4}),
+        req.body('type', 'ingrese una categoria de pelicula')
+        .exists().isLength({min:4,max:4})
+    ],(req, res) => {
 
-        //Validate form
-        //Use Express.validator
-        //https://express-validator.github.io/docs/
-    }
-    else{
-        //res.send('Wrong request');
-        res.status(500).json({error: 'There was an error'});
-    }
-});
+        //const errors = validationResult();
+        const {title, director, year, type}= req.body;
+        if(title && director && year && type)
+        {
+            const id = movies.length + 1;
+
+            const newMovie = {...req.body, id};
+            res.json(movies);
+            //console.log(newMovie);
+            movies.push(newMovie);
+        }
+        else{
+            //res.send('Wrong request');
+            res.status(500).json({error: 'There was an error'});
+        }
+    });
 
 router.delete('/:id', (req, res) => {
     const { id} =req.params; 
