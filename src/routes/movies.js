@@ -3,41 +3,67 @@ const router = Router();
 const _ = require('underscore');
 
 const movies = require('./sample.json');
-
+const {check} = require('express-validator');
 
 //console.log(movies);
 
 router.get('/', (req, res) => {
-        res.json(movies);
+    res.json(movies);
 });
 
-router.post('/', [
-        req.body('year', 'ingrese correctamente el campo de año')
-        .exists().isNumeric().isLength({min:4,max:4}),
-        req.body('title', 'ingrese un titulo válido')
-        .exists().isLength({min:4,max:4}),
-        req.body('director', 'ingrese un director válido')
-        .exists().isLength({min:4,max:4}),
-        req.body('type', 'ingrese una categoria de pelicula')
-        .exists().isLength({min:4,max:4})
-    ],(req, res) => {
 
-        //const errors = validationResult();
-        const {title, director, year, type}= req.body;
-        if(title && director && year && type)
-        {
-            const id = movies.length + 1;
 
-            const newMovie = {...req.body, id};
-            res.json(movies);
-            //console.log(newMovie);
-            movies.push(newMovie);
-        }
-        else{
-            //res.send('Wrong request');
-            res.status(500).json({error: 'There was an error'});
-        }
-    });
+
+
+const createMovie = async(req, res) => {
+    const {title, director, year, type} =req.body;
+    id=movies.length+1;
+    const newMovie ={id, ...req.body};
+    console.log(newMovie);
+    movies.push(newMovie);
+    res.send(movies);
+}
+
+
+const {validationResult} = require('express-validator');
+const validateResult =  (req,res,next)=>{
+    //console.log(req.body.year);
+    try {
+        validationResult(req).throw();
+        return next();
+    } catch (error) {
+        res.status(403);
+        res.send({errors:error.array()});
+    }
+}
+
+const validateCreate = [
+    check('year')
+        .exists()
+        .isLength({min:4})
+        .withMessage('at least has to be 4 characters long')
+        .isLength({max:4})
+        .withMessage('maximun 4 characters long')
+        .not().isEmpty().trim().escape()
+    ,
+    check('title')
+        .exists()
+        .not().isEmpty().trim().escape()
+    ,
+    check('director')
+        .exists()
+        .not().isEmpty().trim().escape()
+    ,    
+    check('type')
+        .exists()
+        .not().isEmpty().trim().escape()
+    ,        
+    (req,res,next)=>{
+        validateResult(req,res,next);
+    }
+];
+
+router.post('/',  validateCreate, createMovie);
 
 router.delete('/:id', (req, res) => {
     const { id} =req.params; 
@@ -47,7 +73,6 @@ router.delete('/:id', (req, res) => {
             movies.splice(i, 1);
         }
     });
-    //console.log(req.params);
     res.send(movies);
 });
 
@@ -69,7 +94,8 @@ router.put('/:id',(req, res)=>{
         res.status(500).json('all data are required');
     }
 });
-module.exports = router;
 
-// 46:00 minutos
-//https://www.youtube.com/watch?v=bK3AJfs7qNY&list=PLTzdf6VDuldGEgyhQFKzTDXRQQ3lMJUoQ&index=3
+
+
+
+module.exports = router;
