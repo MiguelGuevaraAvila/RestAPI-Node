@@ -4,13 +4,15 @@
         "title": "Titanic",
         "director" : "mc macno",
         "year" : "1935",
-        "type" : "Drama"
+        "type" : "Drama",
+        "rate": 10
     },
     {
         "id":2,
         "title": "E.T",
         "director" : "El gontyrri",
         "year" : "1982",
-        "type" : "Paranormal"
+        "type" : "Paranormal",
+        "rate": 68
     }
 ]
