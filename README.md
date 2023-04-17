@@ -9,7 +9,7 @@ Used as back end and JSON as DB
 ## Postman 
 Used to test GET/POST/PUT/DELETE
 
-# Nodemon 
-# Express
-# Express-validator
+### Nodemon 
+### Express
+### Express-validator
 ### Node-fetch
