@@ -44,6 +44,8 @@ const validateCreate = [
         .withMessage('at least has to be 4 characters long')
         .isLength({max:4})
         .withMessage('maximun 4 characters long')
+        .isNumeric()
+        .withMessage('only numeric values are allowed')
         .not().isEmpty().trim().escape()
     ,
     check('title')
