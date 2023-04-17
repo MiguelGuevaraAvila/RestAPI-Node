@@ -4,6 +4,6 @@ Practise Rest API using Node
 NODE
 Used as back end and JSON as DB
 
-Postamn 
+Postman 
 Used to test GET/POST/PUT/DELETE
 
